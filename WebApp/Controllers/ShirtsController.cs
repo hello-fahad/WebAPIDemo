@@ -26,18 +26,20 @@ namespace WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateShirt(Shirt shirt)
         {
-
             if (ModelState.IsValid)
             {
-                var response = WebApiExecuter.InvokePost("shirts", shirt);
-                if (response != null)
+                var response = await WebApiExecuter.InvokePost("shirts", shirt);
+                if (response != null) // Better to check for success explicitly if possible
                 {
                     return RedirectToAction(nameof(Index));
                 }
+
+                //ModelState.AddModelError("", "Failed to create shirt.");
             }
 
             return View(shirt);
         }
+
 
         public async Task<IActionResult> UpdateShirt(int shirtId)
         {
@@ -48,6 +50,25 @@ namespace WebApp.Controllers
             }
 
             return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateShirt(Shirt shirt)
+        {
+
+            if (ModelState.IsValid)
+            {
+                await WebApiExecuter.InvokePut($"shirts/{shirt.ShirtId}", shirt);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(shirt);
+        }
+
+        public async Task<IActionResult> DeleteShirt(int shirtId)
+        {
+            await WebApiExecuter.InvokeDelete($"shirts/{shirtId}");
+            return RedirectToAction(nameof(Index));
         }
     }
 }
