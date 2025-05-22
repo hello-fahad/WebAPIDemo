@@ -41,8 +41,6 @@ namespace WebApp.Controllers
                     HandleWebApiException(ex);
                 }
                 
-                
-
                 //ModelState.AddModelError("", "Failed to create shirt.");
             }
 
