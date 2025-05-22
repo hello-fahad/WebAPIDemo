@@ -2,6 +2,7 @@
 using WebAPIDemo.Data;
 using WebAPIDemo.Filters;
 using WebAPIDemo.Filters.ActionFilters;
+using WebAPIDemo.Filters.AuthFilters;
 using WebAPIDemo.Filters.ExceptionFilters;
 using WebAPIDemo.Models;
 using WebAPIDemo.Models.Repositories;
@@ -12,6 +13,7 @@ namespace WebAPIDemo.Controllers
 
 	[ApiController]
 	[Route("api/[controller]")]
+	[JwtTokenAuthFilter]
 	public class ShirtsController : ControllerBase
 	{
         public ApplicationDbContext Db { get; }
