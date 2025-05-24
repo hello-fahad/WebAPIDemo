@@ -57,6 +57,11 @@ namespace WebAPIDemo.Authority
                 return false;
             }
 
+            if(token.StartsWith("Bearer"))
+            {
+                token = token.Substring(6).Trim();
+            }
+
             var secretKey = Encoding.ASCII.GetBytes(strSecretKey);
 
             var tokenHandler = new JwtSecurityTokenHandler();
