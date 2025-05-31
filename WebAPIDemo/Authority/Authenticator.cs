@@ -64,13 +64,11 @@ namespace WebAPIDemo.Authority
 
             var secretKey = Encoding.ASCII.GetBytes(strSecretKey);
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-
             SecurityToken securityToken;
-
 
             try
             {
+                var tokenHandler = new JwtSecurityTokenHandler();
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,

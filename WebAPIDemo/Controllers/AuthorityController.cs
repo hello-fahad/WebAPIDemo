@@ -8,6 +8,7 @@ using System.Security.Claims;
 namespace WebAPIDemo.Controllers
 {
     [ApiController]
+    //[Route("api/[controller]")]
     public class AuthorityController : ControllerBase
     {
 

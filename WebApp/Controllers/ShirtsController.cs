@@ -13,6 +13,7 @@ namespace WebApp.Controllers
             WebApiExecuter = webApiExecuter;
         }
 
+
         public async Task<IActionResult> Index()
         {
             return View(await WebApiExecuter.InvokeGet<List<Shirt>>("shirts"));
@@ -36,11 +37,11 @@ namespace WebApp.Controllers
                         return RedirectToAction(nameof(Index));
                     }
                 }
-                catch(WebApiException ex) 
+                catch (WebApiException ex)
                 {
                     HandleWebApiException(ex);
                 }
-                
+
                 //ModelState.AddModelError("", "Failed to create shirt.");
             }
 
@@ -64,7 +65,7 @@ namespace WebApp.Controllers
                 HandleWebApiException(ex);
                 return View();
             }
-            
+
             return NotFound();
         }
 
@@ -79,11 +80,11 @@ namespace WebApp.Controllers
                     await WebApiExecuter.InvokePut($"shirts/{shirt.ShirtId}", shirt);
                     return RedirectToAction(nameof(Index));
                 }
-                catch(WebApiException ex)
+                catch (WebApiException ex)
                 {
                     HandleWebApiException(ex);
                 }
-                
+
             }
 
             return View(shirt);
@@ -96,13 +97,13 @@ namespace WebApp.Controllers
                 await WebApiExecuter.InvokeDelete($"shirts/{shirtId}");
                 return RedirectToAction(nameof(Index));
             }
-            catch(WebApiException ex)
+            catch (WebApiException ex)
             {
                 HandleWebApiException(ex);
                 return View(nameof(Index),
                     await WebApiExecuter.InvokeGet<List<Shirt>>("shirts"));
             }
-            
+
         }
 
         private void HandleWebApiException(WebApiException ex)
@@ -119,3 +120,4 @@ namespace WebApp.Controllers
         }
     }
 }
+

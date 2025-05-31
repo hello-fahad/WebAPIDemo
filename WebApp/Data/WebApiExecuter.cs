@@ -43,7 +43,7 @@ namespace WebApp.Data
         public async Task InvokePut<T>(string relativeUrl, T obj)
         {
             var httpClient = HttpClientFactory.CreateClient(apiName);
-            // await AddJwtToHeader(httpClient);
+            await AddJwtToHeader(httpClient);
             var response = await httpClient.PutAsJsonAsync(relativeUrl, obj);
             await HandlePotentailError(response);
         }
@@ -67,7 +67,7 @@ namespace WebApp.Data
 
         private async Task AddJwtToHeader(HttpClient httpClient)
         {
-
+            
             var clientId = Configuration.GetValue<string>("ClientId");
             var secret = Configuration.GetValue<string>("Secret");
 
@@ -75,51 +75,19 @@ namespace WebApp.Data
             var authoClient = HttpClientFactory.CreateClient(authApiName);
 
 
-
-
-            try
+            var response = await authoClient.PostAsJsonAsync("auth", new AppCredential
             {
-                var response = await authoClient.PostAsJsonAsync("auth", new AppCredential
-                {
-                    ClientId = clientId,
-                    Secret = secret
-                });
+                ClientId = clientId,
+                Secret = secret
+            });
 
-                var content = await response.Content.ReadAsStringAsync();
+            response.EnsureSuccessStatusCode(); // This throws if not 2xx
 
-                response.EnsureSuccessStatusCode(); // This throws if not 2xx
+            var strToken = await response.Content.ReadAsStringAsync();
 
-                var token = JsonConvert.DeserializeObject<JwtToken>(content);
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token?.AccessToken);
-            }
-            catch (HttpRequestException ex)
-            {
-                // Log full error response for debugging
-                throw new Exception("Authentication failed: " + ex.Message);
-            }
+            var token = JsonConvert.DeserializeObject<JwtToken>(strToken);
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token?.AccessToken);
 
-
-
-
-
-
-
-
-            //var response = await authoClient.PostAsJsonAsync("auth", new AppCredential
-            //{
-            //    ClientId = clientId,
-            //    Secret = secret
-            //});
-
-            //response.EnsureSuccessStatusCode();
-
-            //// Get the JWT
-            //string strToken = await response.Content.ReadAsStringAsync();
-            //var token = JsonConvert.DeserializeObject<JwtToken>(strToken);
-
-
-            //// Pass the JWT to the endpoints through the http headers
-            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token?.AccessToken);
         }
     }
 }
