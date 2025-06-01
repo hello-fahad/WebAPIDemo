@@ -57,6 +57,9 @@ namespace WebAPIDemo.Authority
                 return false;
             }
 
+
+
+
             if(token.StartsWith("Bearer"))
             {
                 token = token.Substring(6).Trim();
