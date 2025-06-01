@@ -4,13 +4,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient("ShirtsApi", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7120/api/");
+    client.BaseAddress = new Uri("https://localhost:7012/api/");
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 
 builder.Services.AddHttpClient("AuthorityApi", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7120/");
+    client.BaseAddress = new Uri("https://localhost:7012/");
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 
