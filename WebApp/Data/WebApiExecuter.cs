@@ -82,6 +82,13 @@ namespace WebApp.Data
             {
                 var clientId = Configuration.GetValue<string>("ClientId");
                 var secret = Configuration.GetValue<string>("Secret");
+               // var clientId = Configuration.GetValue<string>("ClientId")
+               //?? throw new InvalidOperationException("ClientId is not configured.");
+
+               // var secret = Configuration.GetValue<string>("Secret")
+               //              ?? throw new InvalidOperationException("Secret is not configured.");
+
+
 
                 // Authenticate 
                 var authoClient = HttpClientFactory.CreateClient(authApiName);
@@ -91,9 +98,10 @@ namespace WebApp.Data
                 {
                     ClientId = clientId,
                     Secret = secret
+
                 });
 
-                response.EnsureSuccessStatusCode(); // This throws if not 2xx
+                response.EnsureSuccessStatusCode(); // This throws if not 2xx 
                 strToken = await response.Content.ReadAsStringAsync();
 
                 HttpContextAccessor.HttpContext?.Session.SetString("access_token", strToken);
@@ -101,6 +109,13 @@ namespace WebApp.Data
             }
 
             token = JsonConvert.DeserializeObject<JwtToken>(strToken);
+            //if (string.IsNullOrWhiteSpace(strToken))
+            //{
+            //    throw new InvalidOperationException("JWT token string is missing from session.");
+            //}
+
+            //token = JsonConvert.DeserializeObject<JwtToken>(strToken);
+
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token?.AccessToken);
         }
     }
