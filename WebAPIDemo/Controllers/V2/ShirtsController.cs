@@ -3,16 +3,16 @@ using WebAPIDemo.Attributes;
 using WebAPIDemo.Data;
 using WebAPIDemo.Filters;
 using WebAPIDemo.Filters.ActionFilters;
+using WebAPIDemo.Filters.ActionFilters.V2;
 using WebAPIDemo.Filters.AuthFilters;
 using WebAPIDemo.Filters.ExceptionFilters;
 using WebAPIDemo.Models;
 using WebAPIDemo.Models.Repositories;
 
-namespace WebAPIDemo.Controllers
+namespace WebAPIDemo.Controllers.V2
 {
-
-	[ApiVersion("1.0")]
-	[ApiController]
+    [ApiVersion("2.0")]
+    [ApiController]
 	[Route("api/[controller]")]
 	[JwtTokenAuthFilter]
 	public class ShirtsController : ControllerBase
@@ -44,6 +44,7 @@ namespace WebAPIDemo.Controllers
 
 		[HttpPost]
 		[TypeFilter(typeof(Shirt_ValidateCreateShirtFilterAttribute))]
+		[Shirt_EnsureDescriptionIsPresentFilter]
         [RequiredClaim("write", "true")]
         public IActionResult CreateShirt(Shirt shirt)
 		{
@@ -58,9 +59,10 @@ namespace WebAPIDemo.Controllers
 
 		[HttpPut("{id}")]
         [TypeFilter(typeof(Shirt_ValidateShirtIdFilterAttribute))]
-        [RequiredClaim("write", "true")]
         [Shirt_ValidateUpdateShirtFilter]
 		[TypeFilter(typeof(Shirt_HandleUpdateExceptionsFilterAttribute))]
+        [Shirt_EnsureDescriptionIsPresentFilter]
+        [RequiredClaim("write", "true")]
         public IActionResult UpdateShirt(int id, Shirt shirt)
 		{
 			var shirtToUpdate = HttpContext.Items["shirt"] as Shirt;
